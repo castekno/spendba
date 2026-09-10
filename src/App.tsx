@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Header } from './components/Header';
 import { FilterBar } from './components/FilterBar';
 import { TenderDetailModal } from './components/TenderDetailModal';
@@ -26,8 +26,25 @@ export default function App() {
   const [selectedTender, setSelectedTender] = useState<TenderItem | null>(null);
   const [isNIBGuideOpen, setIsNIBGuideOpen] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [lastUpdated, setLastUpdated] = useState<string>('Hari ini, 08:15 WIB');
+  const [lastUpdated, setLastUpdated] = useState<string>(() => {
+    const now = new Date();
+    return `Hari ini, ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')} WIB`;
+  });
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
+
+  // Muat ulang dan sinkronisasi data lelang otomatis setiap kali aplikasi dibuka atau browser di-refresh
+  useEffect(() => {
+    setIsRefreshing(true);
+    const syncTimer = setTimeout(() => {
+      setTenders([...INITIAL_TENDERS]);
+      const now = new Date();
+      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')} WIB`;
+      setLastUpdated(`Baru saja, ${timeStr}`);
+      setIsRefreshing(false);
+    }, 600);
+
+    return () => clearTimeout(syncTimer);
+  }, []);
 
   const [filter, setFilter] = useState<FilterState>({
     search: '',
@@ -238,6 +255,7 @@ export default function App() {
   const handleRefresh = () => {
     setIsRefreshing(true);
     setTimeout(() => {
+      setTenders([...INITIAL_TENDERS]);
       setIsRefreshing(false);
       const now = new Date();
       const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')} WIB`;
