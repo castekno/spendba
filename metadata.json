@@ -1,0 +1,6 @@
+{
+  "name": "Spend Bukit Asam",
+  "description": "Portal lelang pengadaan barang & jasa PT Bukit Asam Tbk dengan informasi klasifikasi NIB (IT, Sipil, Jasa, Mekanikal, dll) responsif dan modern.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
