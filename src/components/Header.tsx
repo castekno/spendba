@@ -33,38 +33,38 @@ export const Header: React.FC<HeaderProps> = ({
     <header className="relative bg-gradient-to-r from-slate-900 via-[#0B2545] to-slate-900 text-white shadow-xl border-b border-slate-800">
       {/* Top Notification Bar */}
       <div className="bg-slate-950/60 border-b border-white/5 py-1.5 px-4 text-xs">
-        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-slate-300">
-          <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-medium border border-emerald-500/30 text-[11px]">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-              Portal Terbuka
-            </span>
-            <span className="hidden sm:inline text-slate-400">|</span>
-            <span className="hidden sm:inline">Pengadaan Barang & Jasa PT Bukit Asam Tbk (PTBA)</span>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <span className="text-[11px] text-slate-400">Sinkronisasi: {lastUpdated}</span>
-            <button
-              onClick={onRefresh}
-              id="header-refresh-btn"
-              title="Perbarui status lelang"
-              disabled={isRefreshing}
-              className="inline-flex items-center gap-1 text-[11px] text-amber-400 hover:text-amber-300 transition-colors disabled:opacity-50 cursor-pointer"
-            >
-              <RefreshCw className={`w-3 h-3 ${isRefreshing ? 'animate-spin' : ''}`} />
-              <span>{isRefreshing ? 'Memuat...' : 'Muat Ulang'}</span>
-            </button>
-            <a
-              href="https://spend.bukitasam.co.id/web/index/lelang"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-[11px] text-sky-400 hover:text-sky-300 hover:underline"
-              title="Buka situs resmi SPEND PTBA"
-            >
-              <span>spend.bukitasam.co.id</span>
-              <ExternalLink className="w-3 h-3" />
-            </a>
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5 sm:gap-4 text-slate-300">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-2.5">
+            <div>
+              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-medium border border-emerald-500/30 text-[11px]">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                Portal Terbuka
+              </span>
+            </div>
+            <span className="hidden sm:inline text-slate-500">|</span>
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[11px] text-slate-400">
+              <span>Sinkronisasi: {lastUpdated}</span>
+              <button
+                onClick={onRefresh}
+                id="header-refresh-btn"
+                title="Perbarui status lelang"
+                disabled={isRefreshing}
+                className="inline-flex items-center gap-1 text-[11px] text-amber-400 hover:text-amber-300 transition-colors disabled:opacity-50 cursor-pointer"
+              >
+                <RefreshCw className={`w-3 h-3 ${isRefreshing ? 'animate-spin' : ''}`} />
+                <span>{isRefreshing ? 'Memuat...' : 'Muat Ulang'}</span>
+              </button>
+              <a
+                href="https://spend.bukitasam.co.id/web/index/lelang"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-[11px] text-sky-400 hover:text-sky-300 hover:underline"
+                title="Buka situs resmi SPEND PTBA"
+              >
+                <span>spend.bukitasam.co.id</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
+            </div>
           </div>
         </div>
       </div>

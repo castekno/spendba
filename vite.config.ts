@@ -3,6 +3,93 @@ import react from '@vitejs/plugin-react';
 import fs from 'fs';
 import path from 'path';
 import {defineConfig, Plugin} from 'vite';
+import { fetchLiveTendersFromPTBA } from './src/services/spendBukitAsamApi';
+
+let cachedTenders: any = null;
+let lastCacheTime = 0;
+
+function lelangApiPlugin(): Plugin {
+  return {
+    name: 'vite-plugin-lelang-api',
+    configureServer(server) {
+      server.middlewares.use(async (req, res, next) => {
+        if (req.url && req.url.startsWith('/api/lelang')) {
+          res.setHeader('Content-Type', 'application/json');
+          res.setHeader('Access-Control-Allow-Origin', '*');
+          const isForce = req.url.includes('refresh=1');
+          const now = Date.now();
+
+          if (!isForce && cachedTenders && now - lastCacheTime < 30000) {
+            res.end(
+              JSON.stringify({
+                status: true,
+                source: 'cache',
+                count: cachedTenders.length,
+                data: cachedTenders,
+              })
+            );
+            return;
+          }
+
+          try {
+            const data = await fetchLiveTendersFromPTBA();
+            if (data && data.length > 0) {
+              cachedTenders = data;
+              lastCacheTime = Date.now();
+              res.end(
+                JSON.stringify({
+                  status: true,
+                  source: 'spend.bukitasam.co.id',
+                  count: data.length,
+                  data,
+                })
+              );
+              return;
+            }
+
+            if (cachedTenders) {
+              res.end(
+                JSON.stringify({
+                  status: true,
+                  source: 'stale-cache',
+                  count: cachedTenders.length,
+                  data: cachedTenders,
+                })
+              );
+              return;
+            }
+
+            res.end(JSON.stringify({ status: true, source: 'empty', count: 0, data: [] }));
+            return;
+          } catch (err: any) {
+            console.error('API /api/lelang error:', err);
+            if (cachedTenders) {
+              res.end(
+                JSON.stringify({
+                  status: true,
+                  source: 'fallback-cache',
+                  count: cachedTenders.length,
+                  data: cachedTenders,
+                })
+              );
+              return;
+            }
+            res.statusCode = 502;
+            res.end(
+              JSON.stringify({
+                status: false,
+                message: 'Gagal mengambil data dari spend.bukitasam.co.id',
+                error: err?.message,
+              })
+            );
+            return;
+          }
+        }
+        next();
+      });
+    },
+  };
+}
 
 // LINT.IfChange(aistudio_media_plugin)
 function aistudioMediaPlugin(): Plugin {
@@ -66,7 +153,7 @@ function aistudioMediaPlugin(): Plugin {
 
 export default defineConfig(() => {
   return {
-    plugins: [react(), tailwindcss(), aistudioMediaPlugin()],
+    plugins: [react(), tailwindcss(), aistudioMediaPlugin(), lelangApiPlugin()],
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),

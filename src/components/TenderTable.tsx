@@ -21,16 +21,15 @@ export const TenderTable: React.FC<TenderTableProps> = ({ tenders, onSelectTende
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'Pendaftaran':
-        return 'bg-emerald-100 text-emerald-800 border-emerald-300 font-bold';
-      case 'Pemasukan Penawaran':
-        return 'bg-amber-100 text-amber-900 border-amber-300 font-bold';
-      case 'Aanwijzing':
-        return 'bg-sky-100 text-sky-800 border-sky-300 font-bold';
+      case 'Prakualifikasi':
+        return 'bg-emerald-50 text-emerald-800 border-emerald-300 font-bold';
+      case 'Ditutup':
+      case 'Selesai':
+        return 'bg-slate-100 text-slate-700 border-slate-300 font-semibold';
       case 'Evaluasi':
         return 'bg-purple-100 text-purple-800 border-purple-300 font-bold';
       default:
-        return 'bg-slate-100 text-slate-700 border-slate-200 font-medium';
+        return 'bg-emerald-50 text-emerald-800 border-emerald-200 font-medium';
     }
   };
 
@@ -40,7 +39,7 @@ export const TenderTable: React.FC<TenderTableProps> = ({ tenders, onSelectTende
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-slate-900 text-white text-xs font-semibold uppercase tracking-wider">
-              <th className="py-3.5 px-4">Kategori & Tahap</th>
+              <th className="py-3.5 px-4">Status & Bidang</th>
               <th className="py-3.5 px-4">Nomor SPPH & Judul Pengadaan</th>
               <th className="py-3.5 px-4">KBLI & Klasifikasi PTBA</th>
               <th className="py-3.5 px-4">Unit / Lokasi</th>
@@ -51,11 +50,11 @@ export const TenderTable: React.FC<TenderTableProps> = ({ tenders, onSelectTende
           </thead>
           <tbody className="divide-y divide-slate-100 text-xs text-slate-700">
             {tenders.map((tender) => {
-              const catConfig = NIB_CATEGORY_CONFIG[tender.nib.category] || NIB_CATEGORY_CONFIG.Lainnya;
+              const catConfig = (tender?.nib?.category && NIB_CATEGORY_CONFIG[tender.nib.category]) || NIB_CATEGORY_CONFIG.Lainnya;
               const daysRemaining = getDaysRemaining(tender.closingDate);
 
               return (
-                <tr 
+                <tr
                   key={tender.id}
                   onClick={() => onSelectTender(tender)}
                   className={`hover:bg-slate-50/80 transition-colors cursor-pointer group ${
@@ -66,6 +65,9 @@ export const TenderTable: React.FC<TenderTableProps> = ({ tenders, onSelectTende
                   <td className="py-4 px-4 whitespace-nowrap align-top">
                     <div className="space-y-1.5">
                       <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-[11px] border ${getStatusBadge(tender.status)}`}>
+                        {tender.status === 'Prakualifikasi' && (
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        )}
                         {tender.status}
                       </span>
                       <div>

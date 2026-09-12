@@ -31,7 +31,7 @@ export const TenderDetailModal: React.FC<TenderDetailModalProps> = ({ tender, on
 
   if (!tender) return null;
 
-  const categoryConfig = NIB_CATEGORY_CONFIG[tender.nib.category] || NIB_CATEGORY_CONFIG.Lainnya;
+  const categoryConfig = (tender?.nib?.category && NIB_CATEGORY_CONFIG[tender.nib.category]) || NIB_CATEGORY_CONFIG.Lainnya;
 
   const handleCopySPPH = () => {
     navigator.clipboard.writeText(tender.spphNumber);
@@ -120,15 +120,20 @@ export const TenderDetailModal: React.FC<TenderDetailModalProps> = ({ tender, on
               <div className="font-semibold text-slate-900 text-xs sm:text-sm mt-0.5">{tender.method}</div>
             </div>
             <div>
-              <div className="text-[11px] text-slate-500 font-medium">Tahap Saat Ini</div>
-              <div className="font-semibold text-amber-700 text-xs sm:text-sm mt-0.5">{tender.status}</div>
+              <div className="text-[11px] text-slate-500 font-medium">Status Pengadaan</div>
+              <div className="font-semibold text-emerald-700 text-xs sm:text-sm mt-0.5 inline-flex items-center gap-1.5">
+                {tender.status === 'Prakualifikasi' && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                )}
+                {tender.status}
+              </div>
             </div>
             <div>
-              <div className="text-[11px] text-slate-500 font-medium">Tanggal Rilis</div>
+              <div className="text-[11px] text-slate-500 font-medium">Tanggal Pembukaan</div>
               <div className="font-semibold text-slate-900 text-xs sm:text-sm mt-0.5">{tender.publishDate}</div>
             </div>
             <div>
-              <div className="text-[11px] text-slate-500 font-medium">Batas Akhir Penawaran</div>
+              <div className="text-[11px] text-slate-500 font-medium">Batas Akhir (Penutupan)</div>
               <div className="font-semibold text-rose-700 text-xs sm:text-sm mt-0.5">{tender.closingDate} WIB</div>
             </div>
           </div>

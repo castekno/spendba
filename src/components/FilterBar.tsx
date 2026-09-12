@@ -11,10 +11,9 @@ import {
   Layers, 
   LayoutGrid, 
   List, 
-  ArrowUpDown,
   MapPin
 } from 'lucide-react';
-import { NIBCategory, FilterState, TenderStatus, BusinessQualification } from '../types/tender';
+import { NIBCategory, FilterState, BusinessQualification } from '../types/tender';
 import { NIB_CATEGORY_CONFIG, PTBA_LOCATIONS } from '../data/tenders';
 
 interface FilterBarProps {
@@ -73,9 +72,9 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-200/80 p-4 sm:p-5 mb-6">
       {/* Primary Row: Search and Controls */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-        {/* Search Input */}
-        <div className="relative flex-1 min-w-[280px]">
+      <div className="flex flex-col md:flex-row md:items-center gap-3">
+        {/* Search Input - responsive full width on mobile, flex-1 on desktop */}
+        <div className="relative flex-1 w-full min-w-0">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <input
             type="text"
@@ -88,7 +87,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           {filter.search && (
             <button
               onClick={() => setFilter((prev) => ({ ...prev, search: '' }))}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5 cursor-pointer"
               title="Hapus pencarian"
             >
               <X className="w-4 h-4" />
@@ -96,15 +95,15 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           )}
         </div>
 
-        {/* Secondary Selectors & View Toggle */}
-        <div className="flex flex-wrap items-center gap-2.5">
+        {/* Location Filter & Grid/Table View Mode directly to the right */}
+        <div className="flex items-center gap-2.5 w-full md:w-auto justify-between md:justify-start">
           {/* Location Filter */}
-          <div className="relative flex-1 sm:flex-none">
+          <div className="relative flex-1 md:flex-none">
             <select
               value={filter.unitKerja}
               onChange={(e) => setFilter((prev) => ({ ...prev, unitKerja: e.target.value }))}
               id="filter-location"
-              className="w-full sm:w-auto text-xs sm:text-sm pl-3 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 cursor-pointer"
+              className="w-full md:w-auto text-xs sm:text-sm pl-3 pr-8 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 cursor-pointer"
             >
               {PTBA_LOCATIONS.map((loc) => (
                 <option key={loc} value={loc}>
@@ -114,44 +113,13 @@ export const FilterBar: React.FC<FilterBarProps> = ({
             </select>
           </div>
 
-          {/* Status Filter */}
-          <div className="relative flex-1 sm:flex-none">
-            <select
-              value={filter.status}
-              onChange={(e) => setFilter((prev) => ({ ...prev, status: e.target.value as TenderStatus | 'Semua' }))}
-              id="filter-status"
-              className="w-full sm:w-auto text-xs sm:text-sm pl-3 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 cursor-pointer"
-            >
-              <option value="Semua">Semua Tahap</option>
-              <option value="Pendaftaran">Pendaftaran</option>
-              <option value="Aanwijzing">Aanwijzing</option>
-              <option value="Pemasukan Penawaran">Pemasukan Dokumen</option>
-              <option value="Evaluasi">Evaluasi Teknis</option>
-              <option value="Pengumuman Pemenang">Pengumuman Pemenang</option>
-            </select>
-          </div>
-
-          {/* Sort By */}
-          <div className="relative flex-1 sm:flex-none">
-            <select
-              value={filter.sortBy}
-              onChange={(e) => setFilter((prev) => ({ ...prev, sortBy: e.target.value as any }))}
-              id="filter-sort"
-              className="w-full sm:w-auto text-xs sm:text-sm pl-3 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 cursor-pointer"
-            >
-              <option value="deadline">Urut: Batas Waktu Terdekat</option>
-              <option value="latest">Urut: Proyek Terbaru</option>
-              <option value="title">Urut: Judul Proyek (A-Z)</option>
-            </select>
-          </div>
-
           {/* Grid/Table View Mode */}
-          <div className="inline-flex rounded-lg border border-slate-200 p-0.5 bg-slate-100 ml-auto sm:ml-0">
+          <div className="inline-flex rounded-lg border border-slate-200 p-0.5 bg-slate-100 shrink-0">
             <button
               onClick={() => setViewMode('grid')}
               id="view-mode-grid"
               title="Tampilan Kartu"
-              className={`p-1.5 rounded-md transition-all ${
+              className={`p-2 rounded-md transition-all cursor-pointer ${
                 viewMode === 'grid'
                   ? 'bg-white text-slate-900 shadow-xs font-semibold'
                   : 'text-slate-500 hover:text-slate-800'
@@ -163,7 +131,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
               onClick={() => setViewMode('table')}
               id="view-mode-table"
               title="Tampilan Tabel"
-              className={`p-1.5 rounded-md transition-all ${
+              className={`p-2 rounded-md transition-all cursor-pointer ${
                 viewMode === 'table'
                   ? 'bg-white text-slate-900 shadow-xs font-semibold'
                   : 'text-slate-500 hover:text-slate-800'
@@ -205,7 +173,9 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           {nibCategories.map((cat) => {
             const isSelected = filter.nibCategory === cat;
             const count = categoryCounts[cat] || 0;
-            const config = NIB_CATEGORY_CONFIG[cat];
+            const label = cat === 'Semua' 
+              ? 'Semua Bidang' 
+              : (NIB_CATEGORY_CONFIG[cat]?.label || cat);
 
             return (
               <button
@@ -221,7 +191,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
                 <span className={isSelected ? 'text-amber-400' : 'text-slate-500'}>
                   {getCategoryIcon(cat)}
                 </span>
-                <span>{config.label}</span>
+                <span>{label}</span>
                 <span
                   className={`ml-0.5 px-1.5 py-0.2 rounded-full text-[11px] font-semibold ${
                     isSelected

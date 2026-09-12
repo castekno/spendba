@@ -7,11 +7,10 @@ export type NIBCategory =
   | 'Lainnya';
 
 export type TenderStatus = 
-  | 'Pendaftaran' 
-  | 'Aanwijzing' 
-  | 'Pemasukan Penawaran' 
+  | 'Prakualifikasi' 
+  | 'Ditutup' 
   | 'Evaluasi' 
-  | 'Pengumuman Pemenang';
+  | 'Selesai';
 
 export type BusinessQualification = 'Kecil' | 'Menengah' | 'Besar' | 'Semua Kualifikasi';
 
@@ -61,7 +60,6 @@ export interface TenderTimeStats {
   under3Days: number;
   approaching: number; // 3-7 hari
   relaxed: number;     // > 7 hari
-  pendaftaranCount: number;
-  penawaranCount: number;
-  aanwijzingCount: number;
+  prakualifikasiCount?: number;
+  ditutupCount?: number;
 }

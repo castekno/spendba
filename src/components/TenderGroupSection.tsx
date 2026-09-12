@@ -1,12 +1,9 @@
 import React from 'react';
 import { 
-  UserCheck, 
-  Send, 
-  HelpCircle, 
+  FileCheck,
   Award, 
   Clock, 
   AlertTriangle, 
-  ChevronRight,
   Sparkles
 } from 'lucide-react';
 import { TenderItem, TenderStatus } from '../types/tender';
@@ -16,8 +13,8 @@ import { getDaysRemaining } from '../utils/dateUtils';
 
 export interface StageGroupConfig {
   id: string;
-  stageName: TenderStatus | 'Evaluasi';
-  stageNumber: number;
+  stageName: TenderStatus | string;
+  stageNumber?: number;
   title: string;
   subtitle: string;
   badgeClass: string;
@@ -50,15 +47,15 @@ export const TenderGroupSection: React.FC<TenderGroupSectionProps> = ({
 
   const getStageIcon = () => {
     switch (config.stageName) {
-      case 'Pendaftaran':
-        return <UserCheck className="w-5 h-5 text-emerald-700" />;
-      case 'Pemasukan Penawaran':
-        return <Send className="w-5 h-5 text-amber-700" />;
-      case 'Aanwijzing':
-        return <HelpCircle className="w-5 h-5 text-sky-700" />;
+      case 'Prakualifikasi':
+        return <FileCheck className="w-5 h-5 text-emerald-700" />;
+      case 'Ditutup':
+      case 'Selesai':
+        return <Clock className="w-5 h-5 text-slate-600" />;
       case 'Evaluasi':
-      default:
         return <Award className="w-5 h-5 text-purple-700" />;
+      default:
+        return <Sparkles className="w-5 h-5 text-emerald-700" />;
     }
   };
 
@@ -75,8 +72,11 @@ export const TenderGroupSection: React.FC<TenderGroupSectionProps> = ({
 
             <div>
               <div className="flex flex-wrap items-center gap-2">
-                <span className={`px-2 py-0.5 rounded text-[11px] font-bold border uppercase tracking-wider ${config.badgeClass}`}>
-                  Tahap {config.stageNumber} • {config.stageName}
+                <span className={`px-2.5 py-0.5 rounded text-[11px] font-bold border uppercase tracking-wider inline-flex items-center gap-1.5 ${config.badgeClass}`}>
+                  {config.stageName === 'Prakualifikasi' && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                  )}
+                  {config.stageName}
                 </span>
 
                 <span className="font-bold text-slate-900 text-sm sm:text-base">
@@ -109,10 +109,6 @@ export const TenderGroupSection: React.FC<TenderGroupSectionProps> = ({
                 <span>{approachingCount} Paket (3–7 Hari)</span>
               </span>
             )}
-
-            <span className="text-[11px] text-slate-400 font-medium">
-              Diurutkan: Penutupan Terdekat
-            </span>
           </div>
         </div>
       </div>

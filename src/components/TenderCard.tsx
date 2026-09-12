@@ -23,7 +23,7 @@ interface TenderCardProps {
 
 export const TenderCard: React.FC<TenderCardProps> = ({ tender, onSelectTender }) => {
   const [copied, setCopied] = useState(false);
-  const categoryConfig = NIB_CATEGORY_CONFIG[tender.nib.category] || NIB_CATEGORY_CONFIG.Lainnya;
+  const categoryConfig = (tender?.nib?.category && NIB_CATEGORY_CONFIG[tender.nib.category]) || NIB_CATEGORY_CONFIG.Lainnya;
 
   const handleCopySPPH = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -36,18 +36,15 @@ export const TenderCard: React.FC<TenderCardProps> = ({ tender, onSelectTender }
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'Pendaftaran':
-        return 'bg-emerald-100 text-emerald-800 border-emerald-300 font-bold';
-      case 'Pemasukan Penawaran':
-        return 'bg-amber-100 text-amber-900 border-amber-300 font-bold';
-      case 'Aanwijzing':
-        return 'bg-sky-100 text-sky-800 border-sky-300 font-bold';
+      case 'Prakualifikasi':
+        return 'bg-emerald-50 text-emerald-800 border-emerald-300 font-bold';
+      case 'Ditutup':
+      case 'Selesai':
+        return 'bg-slate-100 text-slate-700 border-slate-300 font-semibold';
       case 'Evaluasi':
         return 'bg-purple-100 text-purple-800 border-purple-300 font-bold';
-      case 'Pengumuman Pemenang':
-        return 'bg-slate-100 text-slate-700 border-slate-300 font-bold';
       default:
-        return 'bg-slate-50 text-slate-600 border-slate-200';
+        return 'bg-emerald-50 text-emerald-800 border-emerald-200 font-medium';
     }
   };
 
@@ -67,7 +64,10 @@ export const TenderCard: React.FC<TenderCardProps> = ({ tender, onSelectTender }
         <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
           {/* Stage & NIB Badges */}
           <div className="flex items-center gap-1.5 flex-wrap">
-            <span className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] border ${getStatusBadge(tender.status)}`}>
+            <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[11px] border ${getStatusBadge(tender.status)}`}>
+              {tender.status === 'Prakualifikasi' && (
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              )}
               {tender.status}
             </span>
             <span 
