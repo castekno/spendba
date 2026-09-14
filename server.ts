@@ -14,7 +14,7 @@ app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-app.get('/api/lelang', async (req, res) => {
+app.get(['/api/lelang', '/api/lelang.json'], async (req, res) => {
   const isForce = req.query.refresh === '1';
   const now = Date.now();
 

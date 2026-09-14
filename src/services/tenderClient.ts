@@ -34,7 +34,7 @@ export async function fetchTendersData(forceRefresh = false): Promise<FetchResul
           localStorage.setItem(CACHE_KEY, JSON.stringify(result.data));
           localStorage.setItem(CACHE_TIME_KEY, timeStr);
         } catch (e) {
-          // ignore localStorage errors (e.g. private mode)
+          // ignore localStorage errors
         }
 
         return {
@@ -46,29 +46,64 @@ export async function fetchTendersData(forceRefresh = false): Promise<FetchResul
       }
     }
   } catch (apiErr) {
-    console.warn('Endpoint /api/lelang not reachable, attempting fallback:', apiErr);
+    console.warn('Endpoint /api/lelang not reachable, attempting static api fallback:', apiErr);
   }
 
-  // 2. Check localStorage cache if available
+  // 2. Secondary Network Fallback: Try /api/lelang.json (pre-rendered live snapshot from build/sync)
   try {
-    const cachedJson = localStorage.getItem(CACHE_KEY);
-    const cachedTime = localStorage.getItem(CACHE_TIME_KEY);
-    if (cachedJson) {
-      const cachedTenders = JSON.parse(cachedJson);
-      if (Array.isArray(cachedTenders) && cachedTenders.length > 0) {
+    const jsonUrl = `/api/lelang.json?_t=${Date.now()}`;
+    const jsonRes = await fetch(jsonUrl, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+      },
+    });
+
+    if (jsonRes.ok) {
+      const jsonResult = await jsonRes.json();
+      if (jsonResult.status && Array.isArray(jsonResult.data) && jsonResult.data.length > 0) {
+        try {
+          localStorage.setItem(CACHE_KEY, JSON.stringify(jsonResult.data));
+          localStorage.setItem(CACHE_TIME_KEY, timeStr);
+        } catch (e) {
+          // ignore localStorage errors
+        }
+
         return {
-          tenders: cachedTenders,
-          isLive: false,
-          timestamp: cachedTime ? `Cache, ${cachedTime}` : `Hari ini, ${timeStr}`,
-          source: 'Cache Lokal Terakhir',
+          tenders: jsonResult.data,
+          isLive: true,
+          timestamp: `Hari ini, ${timeStr}`,
+          source: 'Live Sinkron PTBA',
         };
       }
     }
-  } catch (cacheErr) {
-    console.warn('Error reading from localStorage cache:', cacheErr);
+  } catch (jsonErr) {
+    console.warn('Static /api/lelang.json not reachable, checking cache/initial:', jsonErr);
   }
 
-  // 3. Fallback to updated INITIAL_TENDERS
+  // 3. Check localStorage cache only if NOT force refreshing
+  if (!forceRefresh) {
+    try {
+      const cachedJson = localStorage.getItem(CACHE_KEY);
+      const cachedTime = localStorage.getItem(CACHE_TIME_KEY);
+      if (cachedJson) {
+        const cachedTenders = JSON.parse(cachedJson);
+        // Only use cache if it has at least as many items as INITIAL_TENDERS
+        if (Array.isArray(cachedTenders) && cachedTenders.length >= INITIAL_TENDERS.length) {
+          return {
+            tenders: cachedTenders,
+            isLive: false,
+            timestamp: cachedTime ? `Cache, ${cachedTime}` : `Hari ini, ${timeStr}`,
+            source: 'Cache Lokal Terakhir',
+          };
+        }
+      }
+    } catch (cacheErr) {
+      console.warn('Error reading from localStorage cache:', cacheErr);
+    }
+  }
+
+  // 4. Fallback to updated INITIAL_TENDERS
   return {
     tenders: INITIAL_TENDERS,
     isLive: false,
