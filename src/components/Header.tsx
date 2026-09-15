@@ -6,7 +6,8 @@ import {
   FileText, 
   AlertTriangle, 
   Clock, 
-  CalendarCheck
+  CalendarCheck,
+  Server
 } from 'lucide-react';
 import { TenderTimeStats } from '../types/tender';
 
@@ -15,6 +16,7 @@ interface HeaderProps {
   selectedDeadlineFilter?: string;
   onSelectDeadlineFilter?: (filter: 'all' | 'under3Days' | '3to7Days' | 'over7Days') => void;
   onOpenNIBGuide: () => void;
+  onOpenGateway?: () => void;
   onRefresh: () => void;
   isRefreshing: boolean;
   lastUpdated: string;
@@ -25,6 +27,7 @@ export const Header: React.FC<HeaderProps> = ({
   selectedDeadlineFilter = 'all',
   onSelectDeadlineFilter,
   onOpenNIBGuide,
+  onOpenGateway,
   onRefresh,
   isRefreshing,
   lastUpdated,
@@ -54,6 +57,17 @@ export const Header: React.FC<HeaderProps> = ({
                 <RefreshCw className={`w-3 h-3 ${isRefreshing ? 'animate-spin' : ''}`} />
                 <span>{isRefreshing ? 'Memuat...' : 'Muat Ulang'}</span>
               </button>
+              {onOpenGateway && (
+                <button
+                  onClick={onOpenGateway}
+                  id="header-gateway-btn"
+                  title="Status & Pengaturan Jembatan Gateway"
+                  className="inline-flex items-center gap-1 text-[11px] text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer"
+                >
+                  <Server className="w-3 h-3" />
+                  <span>Gateway</span>
+                </button>
+              )}
               <a
                 href="https://spend.bukitasam.co.id/web/index/lelang"
                 target="_blank"

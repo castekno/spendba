@@ -4,6 +4,7 @@ import { FilterBar } from './components/FilterBar';
 import { TenderDetailModal } from './components/TenderDetailModal';
 import { NIBGuideModal } from './components/NIBGuideModal';
 import { TenderGroupSection, StageGroupConfig } from './components/TenderGroupSection';
+import { GatewayModal } from './components/GatewayModal';
 import { INITIAL_TENDERS } from './data/tenders';
 import { fetchTendersData } from './services/tenderClient';
 import { TenderItem, FilterState, NIBCategory, TenderTimeStats, TenderStatus } from './types/tender';
@@ -25,7 +26,9 @@ export default function App() {
   const [tenders, setTenders] = useState<TenderItem[]>(INITIAL_TENDERS);
   const [selectedTender, setSelectedTender] = useState<TenderItem | null>(null);
   const [isNIBGuideOpen, setIsNIBGuideOpen] = useState(false);
+  const [isGatewayModalOpen, setIsGatewayModalOpen] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [currentSource, setCurrentSource] = useState<string>('Live SPEND PTBA');
   const [lastUpdated, setLastUpdated] = useState<string>(() => {
     const now = new Date();
     return `Hari ini, ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')} WIB`;
@@ -37,6 +40,7 @@ export default function App() {
     try {
       const res = await fetchTendersData(force);
       setTenders(res.tenders);
+      setCurrentSource(res.source);
       setLastUpdated(res.isLive ? `${res.timestamp} (${res.source})` : res.timestamp);
     } catch (err) {
       console.warn('Gagal memuat data live:', err);
@@ -276,6 +280,7 @@ export default function App() {
         selectedDeadlineFilter={filter.deadlineFilter}
         onSelectDeadlineFilter={handleSelectDeadlineFilter}
         onOpenNIBGuide={() => setIsNIBGuideOpen(true)}
+        onOpenGateway={() => setIsGatewayModalOpen(true)}
         onRefresh={handleRefresh}
         isRefreshing={isRefreshing}
         lastUpdated={lastUpdated}
@@ -454,6 +459,13 @@ export default function App() {
               Panduan KBLI NIB
             </button>
             <span className="text-slate-600">•</span>
+            <button
+              onClick={() => setIsGatewayModalOpen(true)}
+              className="text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer"
+            >
+              Jembatan Gateway
+            </button>
+            <span className="text-slate-600">•</span>
             <span className="text-slate-500"> © 2026 CasTekno. All rights reserved</span>
           </div>
         </div>
@@ -470,6 +482,14 @@ export default function App() {
         isOpen={isNIBGuideOpen}
         onClose={() => setIsNIBGuideOpen(false)}
         onSelectCategory={(cat) => setFilter((prev) => ({ ...prev, nibCategory: cat }))}
+      />
+
+      {/* Gateway Settings Modal */}
+      <GatewayModal
+        isOpen={isGatewayModalOpen}
+        onClose={() => setIsGatewayModalOpen(false)}
+        onGatewaySaved={() => loadTenders(true)}
+        currentSource={currentSource}
       />
     </div>
   );
