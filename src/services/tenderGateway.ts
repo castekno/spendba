@@ -100,34 +100,38 @@ export async function executeGatewayFetch(forceRefresh = false): Promise<FetchRe
     }
   }
 
-  // 2. Jalur Kedua: Backend Server Express Internal (/api/lelang)
-  // Bekerja di development dan saat dideploy ke Full-Stack Cloud Run
+  // 2. Jalur Utama: Vercel Serverless Function & Backend Internal (/api/lelang)
+  // Bekerja langsung di Vercel (Serverless Function) dan di server dev
   try {
-    const internalUrl = `/api/lelang${forceRefresh ? '?refresh=1' : ''}`;
+    const internalUrl = `/api/lelang?_t=${Date.now()}${forceRefresh ? '&refresh=1' : ''}`;
     const res = await fetchWithTimeout(internalUrl, {
       method: 'GET',
-      headers: { Accept: 'application/json' },
-    }, 6000);
+      headers: { 
+        Accept: 'application/json',
+        'Cache-Control': 'no-cache',
+      },
+    }, 12000);
 
     if (res.ok) {
       const contentType = res.headers.get('content-type') || '';
-      // Pastikan bukan respon HTML SPA fallback (404 ditutupi index.html)
+      // Pastikan respon valid JSON dan bukan HTML fallback
       if (contentType.includes('application/json')) {
         const result = await res.json();
         if (result.status && Array.isArray(result.data) && result.data.length > 0) {
-          saveToCache(result.data, timeStr, 'Live SPEND PTBA');
+          const liveSource = result.source || 'Live SPEND PTBA';
+          saveToCache(result.data, timeStr, liveSource);
           return {
             tenders: result.data,
             isLive: true,
             timestamp: `Hari ini, ${timeStr}`,
-            source: 'Live SPEND PTBA',
-            gatewayUsed: '/api/lelang',
+            source: liveSource,
+            gatewayUsed: '/api/lelang (Vercel / Backend)',
           };
         }
       }
     }
   } catch (err) {
-    console.warn('Internal /api/lelang not available:', err);
+    console.warn('Internal /api/lelang not reachable:', err);
   }
 
   // 3. Jalur Ketiga: Pre-rendered Live Snapshot (/api/lelang.json)

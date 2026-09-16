@@ -16,7 +16,8 @@ interface HeaderProps {
   selectedDeadlineFilter?: string;
   onSelectDeadlineFilter?: (filter: 'all' | 'under3Days' | '3to7Days' | 'over7Days') => void;
   onOpenNIBGuide: () => void;
-  onOpenGateway?: () => void;
+  onStatusSync?: () => void;
+  isSyncing?: boolean;
   onRefresh: () => void;
   isRefreshing: boolean;
   lastUpdated: string;
@@ -27,7 +28,8 @@ export const Header: React.FC<HeaderProps> = ({
   selectedDeadlineFilter = 'all',
   onSelectDeadlineFilter,
   onOpenNIBGuide,
-  onOpenGateway,
+  onStatusSync,
+  isSyncing = false,
   onRefresh,
   isRefreshing,
   lastUpdated,
@@ -57,15 +59,20 @@ export const Header: React.FC<HeaderProps> = ({
                 <RefreshCw className={`w-3 h-3 ${isRefreshing ? 'animate-spin' : ''}`} />
                 <span>{isRefreshing ? 'Memuat...' : 'Muat Ulang'}</span>
               </button>
-              {onOpenGateway && (
+              {onStatusSync && (
                 <button
-                  onClick={onOpenGateway}
+                  onClick={onStatusSync}
                   id="header-gateway-btn"
-                  title="Status & Pengaturan Jembatan Gateway"
-                  className="inline-flex items-center gap-1 text-[11px] text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer"
+                  title="Status Sync"
+                  disabled={isSyncing}
+                  className="inline-flex items-center gap-1 text-[11px] text-emerald-400 hover:text-emerald-300 transition-colors disabled:opacity-50 cursor-pointer"
                 >
-                  <Server className="w-3 h-3" />
-                  <span>Gateway</span>
+                  {isSyncing ? (
+                    <RefreshCw className="w-3 h-3 animate-spin" />
+                  ) : (
+                    <Server className="w-3 h-3" />
+                  )}
+                  <span>Status Sync</span>
                 </button>
               )}
               <a

@@ -25,8 +25,7 @@ async function sync() {
       data: tenders,
     };
     fs.writeFileSync(path.join(publicApiDir, 'lelang.json'), JSON.stringify(payload, null, 2), 'utf-8');
-    fs.writeFileSync(path.join(publicApiDir, 'lelang'), JSON.stringify(payload, null, 2), 'utf-8');
-    console.log('✅ Generated public/api/lelang.json and public/api/lelang');
+    console.log('✅ Generated public/api/lelang.json fallback snapshot');
 
     // 2. Generate updated src/data/tenders.ts with all required exports
     const tendersFile = path.join(process.cwd(), 'src', 'data', 'tenders.ts');

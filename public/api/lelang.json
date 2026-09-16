@@ -1,8 +1,8 @@
 {
   "status": true,
   "source": "spend.bukitasam.co.id",
-  "count": 5,
-  "syncedAt": "2026-09-15T07:20:18.838Z",
+  "count": 4,
+  "syncedAt": "2026-09-16T11:28:20.302Z",
   "data": [
     {
       "id": "ptba-8574",
@@ -44,118 +44,40 @@
       "externalLink": "https://spend.bukitasam.co.id/web/index/lelang"
     },
     {
-      "id": "ptba-8564",
-      "spphNumber": "7510/EKS-1464/LG.02.03/IX/2026",
-      "title": "Jasa Renovasi Gedung SMA Bukit Asam",
-      "unitKerja": "Satuan Kerja Pengadaan Tanjung Enim",
-      "location": "Tanjung Enim, Sumatera Selatan",
-      "method": "Lelang Terbuka 2 Sampul",
+      "id": "ptba-8464",
+      "spphNumber": "7414/EKS-1465/LG.02.03/IX/2026-1",
+      "title": "PEKERJAAN JASA LOGISTIK ANGKUTAN BATUBARA DARI STOCK ROM PTBA PERANAP KE BARGE DI PELABUHAN MUAT KUALA CENAKU RENGAT INDRA GIRI HULU RIAU",
+      "unitKerja": "Unit Pelabuhan Tarahan",
+      "location": "Dermaga Tarahan, Bandar Lampung",
+      "method": "Lelang Terbuka 1 Sampul",
       "status": "Prakualifikasi",
-      "publishDate": "2026-09-11",
-      "closingDate": "2026-09-16 10:00",
+      "publishDate": "2026-09-16",
+      "closingDate": "2026-09-18 15:00",
       "hpsInfo": "Harga Terendah Pasing Grade 80 (Umum)",
       "nib": {
-        "category": "Sipil",
-        "kbliCode": "41012 / 41015",
-        "kbliTitle": "Konstruksi Gedung Pendidikan & Bangunan Sipil",
-        "ptbaClassification": "(SB.13) Jasa Konstruksi Sipil",
+        "category": "Jasa",
+        "kbliCode": "49230 / 52291",
+        "kbliTitle": "Angkutan Barang Khusus Tambang & Jasa Pengurusan Transportasi",
+        "ptbaClassification": "(SB.18) Jasa Penyewaan Alat Transportasi",
         "requiredQualifications": [
           "Menengah",
           "Besar"
         ],
         "specialRequirements": [
-          "Terdaftar dan aktif pada Spend Management System PTBA dengan klasifikasi (SB.13) Jasa Konstruksi Sipil",
+          "Terdaftar dan aktif pada Spend Management System PTBA dengan klasifikasi (SB.18) Jasa Penyewaan Alat Transportasi",
           "Laporan Keuangan teraudit tahun buku terakhir",
           "Memiliki pengalaman kerja sejenis dalam 3 tahun terakhir"
         ]
       },
-      "scopeOfWork": "Jasa Renovasi Bangunan Gedung Sekolah SMA Bukit Asam",
+      "scopeOfWork": "JASA LOGISTIK ANGKUTAN BATUBARA DARI STOCK ROM PTBA KE BARGE DI PELABUHAN MUAT KUALA CENAKU RENGAT INDRA GIRI HULU RIAU",
       "documentRequirements": [
-        "NIB Berbasis Risiko aktif dengan KBLI 41012",
+        "NIB Berbasis Risiko aktif dengan KBLI 49230",
         "Surat Keterangan Fiskal (SKF) tahun berjalan",
         "Pakta Integritas dan Formulir Bebas Benturan Kepentingan",
         "Surat Kuasa (bila dikuasakan) dan fotokopi KTP direksi"
       ],
       "contactPerson": {
-        "division": "Panitia Pengadaan - NYAYU SITI NADYA RACHMA",
-        "email": "pengadaan@bukitasam.co.id"
-      },
-      "externalLink": "https://spend.bukitasam.co.id/web/index/lelang"
-    },
-    {
-      "id": "ptba-8380",
-      "spphNumber": "7330/EKS-1464/LG.02.03/IX/2026",
-      "title": "PENGADAAN JASA ALAT BERAT PRODUKSI – JASA OVERHAUL TRANSMISI SERTA PENYEDIAAN MAJOR COMPONENT & CRITICAL PARTS ALAT BERAT CAT",
-      "unitKerja": "Satuan Kerja Pengadaan Tanjung Enim",
-      "location": "Tanjung Enim, Sumatera Selatan",
-      "method": "Lelang Terbuka 2 Sampul",
-      "status": "Prakualifikasi",
-      "publishDate": "2026-09-09",
-      "closingDate": "2026-09-16 14:00",
-      "hpsInfo": "Harga Terendah Pasing Grade 80 (Umum)",
-      "nib": {
-        "category": "Mekanikal",
-        "kbliCode": "33141 / 28120 / 46591",
-        "kbliTitle": "Reparasi, Pemeliharaan & Suku Cadang Alat Berat/Mekanikal",
-        "ptbaClassification": "(SB.12) Jasa Pemeliharaan Alat Berat",
-        "requiredQualifications": [
-          "Menengah",
-          "Besar"
-        ],
-        "specialRequirements": [
-          "Terdaftar dan aktif pada Spend Management System PTBA dengan klasifikasi (SB.12) Jasa Pemeliharaan Alat Berat",
-          "Laporan Keuangan teraudit tahun buku terakhir",
-          "Memiliki pengalaman kerja sejenis dalam 3 tahun terakhir"
-        ]
-      },
-      "scopeOfWork": "PENGADAAN JASA ALAT BERAT PRODUKSI – JASA OVERHAUL TRANSMISI SERTA PENYEDIAAN MAJOR COMPONENT & CRITICAL PARTS ALAT BERAT CAT",
-      "documentRequirements": [
-        "NIB Berbasis Risiko aktif dengan KBLI 33141",
-        "Surat Keterangan Fiskal (SKF) tahun berjalan",
-        "Pakta Integritas dan Formulir Bebas Benturan Kepentingan",
-        "Surat Kuasa (bila dikuasakan) dan fotokopi KTP direksi"
-      ],
-      "contactPerson": {
-        "division": "Panitia Pengadaan - AJI WIRA SASMITA",
-        "email": "pengadaan@bukitasam.co.id"
-      },
-      "externalLink": "https://spend.bukitasam.co.id/web/index/lelang"
-    },
-    {
-      "id": "ptba-8266",
-      "spphNumber": "7216/EKS-1464/LG.02.03/IX/2026",
-      "title": "Pengadaan Dust Suppression Pump CHO 5 Coal Handling and Transportation Division",
-      "unitKerja": "Satuan Kerja Pengadaan Tanjung Enim",
-      "location": "Tanjung Enim, Sumatera Selatan",
-      "method": "Lelang Terbuka 2 Sampul",
-      "status": "Prakualifikasi",
-      "publishDate": "2026-09-10",
-      "closingDate": "2026-09-16 16:00",
-      "hpsInfo": "Harga Terendah Pasing Grade 80 (Umum)",
-      "nib": {
-        "category": "Mekanikal",
-        "kbliCode": "33141 / 28120 / 46591",
-        "kbliTitle": "Reparasi, Pemeliharaan & Suku Cadang Alat Berat/Mekanikal",
-        "ptbaClassification": "(SB.21) Jasa Pemeliharaan/ Instalasi/ Operasi Peralatan Mekanikal, Elektrikal, Elektronika, Sarana dan Prasarana",
-        "requiredQualifications": [
-          "Menengah",
-          "Besar"
-        ],
-        "specialRequirements": [
-          "Terdaftar dan aktif pada Spend Management System PTBA dengan klasifikasi (SB.21) Jasa Pemeliharaan/ Instalasi/ Operasi Peralatan Mekanikal, Elektrikal, Elektronika, Sarana dan Prasarana",
-          "Laporan Keuangan teraudit tahun buku terakhir",
-          "Memiliki pengalaman kerja sejenis dalam 3 tahun terakhir"
-        ]
-      },
-      "scopeOfWork": "Pengadaan dust suppression pump sebagai upaya untuk mengatasi ganggunan operasional yang disebabkan oleh penumpukan batubara dan lumpur di sepanjang jalur CHF 5",
-      "documentRequirements": [
-        "NIB Berbasis Risiko aktif dengan KBLI 33141",
-        "Surat Keterangan Fiskal (SKF) tahun berjalan",
-        "Pakta Integritas dan Formulir Bebas Benturan Kepentingan",
-        "Surat Kuasa (bila dikuasakan) dan fotokopi KTP direksi"
-      ],
-      "contactPerson": {
-        "division": "Panitia Pengadaan - MULYADI",
+        "division": "Panitia Pengadaan - TONY ZATMIKO",
         "email": "pengadaan@bukitasam.co.id"
       },
       "externalLink": "https://spend.bukitasam.co.id/web/index/lelang"
@@ -187,6 +109,45 @@
         ]
       },
       "scopeOfWork": "Pekerjaan Jasa Sewa Kendaraan Operasional Termasuk Pengemudi Satuan Kerja Operational Services",
+      "documentRequirements": [
+        "NIB Berbasis Risiko aktif dengan KBLI 49230",
+        "Surat Keterangan Fiskal (SKF) tahun berjalan",
+        "Pakta Integritas dan Formulir Bebas Benturan Kepentingan",
+        "Surat Kuasa (bila dikuasakan) dan fotokopi KTP direksi"
+      ],
+      "contactPerson": {
+        "division": "Panitia Pengadaan - MULYADI",
+        "email": "pengadaan@bukitasam.co.id"
+      },
+      "externalLink": "https://spend.bukitasam.co.id/web/index/lelang"
+    },
+    {
+      "id": "ptba-7625",
+      "spphNumber": "6575/EKS-1464/LG.02.03/IX/2026-1",
+      "title": "Jasa Sewa Kendaraan Operasional Termasuk Pengemudi Satuan Kerja Operational Services",
+      "unitKerja": "Satuan Kerja Pengadaan Tanjung Enim",
+      "location": "Tanjung Enim, Sumatera Selatan",
+      "method": "Lelang Terbuka 2 Sampul",
+      "status": "Prakualifikasi",
+      "publishDate": "2026-09-15",
+      "closingDate": "2026-09-21 14:00",
+      "hpsInfo": "Harga Terendah Pasing Grade 80 (Umum)",
+      "nib": {
+        "category": "Jasa",
+        "kbliCode": "49230 / 52291",
+        "kbliTitle": "Angkutan Barang Khusus Tambang & Jasa Pengurusan Transportasi",
+        "ptbaClassification": "(SB.18) Jasa Penyewaan Alat Transportasi",
+        "requiredQualifications": [
+          "Menengah",
+          "Besar"
+        ],
+        "specialRequirements": [
+          "Terdaftar dan aktif pada Spend Management System PTBA dengan klasifikasi (SB.18) Jasa Penyewaan Alat Transportasi",
+          "Laporan Keuangan teraudit tahun buku terakhir",
+          "Memiliki pengalaman kerja sejenis dalam 3 tahun terakhir"
+        ]
+      },
+      "scopeOfWork": "Jasa Sewa Kendaraan Operasional Termasuk Pengemudi Satuan Kerja Operational Services",
       "documentRequirements": [
         "NIB Berbasis Risiko aktif dengan KBLI 49230",
         "Surat Keterangan Fiskal (SKF) tahun berjalan",

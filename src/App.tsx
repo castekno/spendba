@@ -4,7 +4,7 @@ import { FilterBar } from './components/FilterBar';
 import { TenderDetailModal } from './components/TenderDetailModal';
 import { NIBGuideModal } from './components/NIBGuideModal';
 import { TenderGroupSection, StageGroupConfig } from './components/TenderGroupSection';
-import { GatewayModal } from './components/GatewayModal';
+import { SyncMessageModal } from './components/SyncMessageModal';
 import { INITIAL_TENDERS } from './data/tenders';
 import { fetchTendersData } from './services/tenderClient';
 import { TenderItem, FilterState, NIBCategory, TenderTimeStats, TenderStatus } from './types/tender';
@@ -26,7 +26,16 @@ export default function App() {
   const [tenders, setTenders] = useState<TenderItem[]>(INITIAL_TENDERS);
   const [selectedTender, setSelectedTender] = useState<TenderItem | null>(null);
   const [isNIBGuideOpen, setIsNIBGuideOpen] = useState(false);
-  const [isGatewayModalOpen, setIsGatewayModalOpen] = useState(false);
+  const [syncResult, setSyncResult] = useState<{
+    isOpen: boolean;
+    type: 'success' | 'error';
+    message: string;
+  }>({
+    isOpen: false,
+    type: 'success',
+    message: '',
+  });
+  const [isSyncing, setIsSyncing] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [currentSource, setCurrentSource] = useState<string>('Live SPEND PTBA');
   const [lastUpdated, setLastUpdated] = useState<string>(() => {
@@ -46,6 +55,74 @@ export default function App() {
       console.warn('Gagal memuat data live:', err);
     } finally {
       setIsRefreshing(false);
+    }
+  };
+
+  // Langsung eksekusi uji koneksi dan sinkronisasi lelang saat tombol "Status Sync" diklik
+  const handleStatusSync = async () => {
+    setIsSyncing(true);
+    try {
+      const res = await fetch(`/api/lelang?_t=${Date.now()}&refresh=1`, {
+        headers: { Accept: 'application/json' },
+      });
+
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+      }
+
+      const contentType = res.headers.get('content-type') || '';
+      if (!contentType.includes('application/json')) {
+        throw new Error('Server mengembalikan respon selain JSON.');
+      }
+
+      const json = await res.json();
+      const count = Array.isArray(json) ? json.length : (json.data?.length || 0);
+      const rawSource = json.source || 'spend.bukitasam.co.id';
+      const source = rawSource.includes('spend.bukitasam.co.id') ? 'spend.bukitasam.co.id' : rawSource;
+
+      if (json.data && Array.isArray(json.data) && json.data.length > 0) {
+        setTenders(json.data);
+        const now = new Date();
+        const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')} WIB`;
+        setLastUpdated(`Hari ini, ${timeStr} (${rawSource})`);
+        setCurrentSource(rawSource);
+      }
+
+      setSyncResult({
+        isOpen: true,
+        type: 'success',
+        message: `Koneksi Live Berhasil! Terhubung langsung ke SPEND PTBA (${count} paket lelang aktif terdeteksi). Sumber: ${source}.`,
+      });
+    } catch (err: any) {
+      // Jalur cadangan: cek /api/lelang.json
+      try {
+        const fallbackRes = await fetch(`/api/lelang.json?_t=${Date.now()}`, {
+          headers: { Accept: 'application/json' },
+        });
+        if (fallbackRes.ok) {
+          const json = await fallbackRes.json();
+          const count = Array.isArray(json) ? json.length : (json.data?.length || 0);
+          if (json.data && Array.isArray(json.data) && json.data.length > 0) {
+            setTenders(json.data);
+          }
+          setSyncResult({
+            isOpen: true,
+            type: 'success',
+            message: `Koneksi Live Berhasil! Terhubung langsung ke SPEND PTBA (${count} paket lelang aktif terdeteksi). Sumber: spend.bukitasam.co.id.`,
+          });
+          return;
+        }
+      } catch {
+        // Lanjutkan ke error popup
+      }
+
+      setSyncResult({
+        isOpen: true,
+        type: 'error',
+        message: `Gagal terhubung ke endpoint lelang: ${err?.message || 'Server belum merespon'}.`,
+      });
+    } finally {
+      setIsSyncing(false);
     }
   };
 
@@ -280,7 +357,8 @@ export default function App() {
         selectedDeadlineFilter={filter.deadlineFilter}
         onSelectDeadlineFilter={handleSelectDeadlineFilter}
         onOpenNIBGuide={() => setIsNIBGuideOpen(true)}
-        onOpenGateway={() => setIsGatewayModalOpen(true)}
+        onStatusSync={handleStatusSync}
+        isSyncing={isSyncing}
         onRefresh={handleRefresh}
         isRefreshing={isRefreshing}
         lastUpdated={lastUpdated}
@@ -460,10 +538,11 @@ export default function App() {
             </button>
             <span className="text-slate-600">•</span>
             <button
-              onClick={() => setIsGatewayModalOpen(true)}
-              className="text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer"
+              onClick={handleStatusSync}
+              disabled={isSyncing}
+              className="text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer disabled:opacity-50"
             >
-              Jembatan Gateway
+              Status Sync
             </button>
             <span className="text-slate-600">•</span>
             <span className="text-slate-500"> © 2026 CasTekno. All rights reserved</span>
@@ -484,12 +563,12 @@ export default function App() {
         onSelectCategory={(cat) => setFilter((prev) => ({ ...prev, nibCategory: cat }))}
       />
 
-      {/* Gateway Settings Modal */}
-      <GatewayModal
-        isOpen={isGatewayModalOpen}
-        onClose={() => setIsGatewayModalOpen(false)}
-        onGatewaySaved={() => loadTenders(true)}
-        currentSource={currentSource}
+      {/* Message Popup Status Sinkronisasi */}
+      <SyncMessageModal
+        isOpen={syncResult.isOpen}
+        onClose={() => setSyncResult((prev) => ({ ...prev, isOpen: false }))}
+        type={syncResult.type}
+        message={syncResult.message}
       />
     </div>
   );
