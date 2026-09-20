@@ -63,7 +63,10 @@ export default function App() {
     setIsSyncing(true);
     try {
       const res = await fetch(`/api/lelang?_t=${Date.now()}&refresh=1`, {
-        headers: { Accept: 'application/json' },
+        headers: { 
+          Accept: 'application/json',
+          'Cache-Control': 'no-cache',
+        },
       });
 
       if (!res.ok) {
@@ -76,16 +79,16 @@ export default function App() {
       }
 
       const json = await res.json();
-      const count = Array.isArray(json) ? json.length : (json.data?.length || 0);
+      const count = Array.isArray(json) ? json.length : (json.data ? json.data.length : 0);
       const rawSource = json.source || 'spend.bukitasam.co.id';
       const source = rawSource.includes('spend.bukitasam.co.id') ? 'spend.bukitasam.co.id' : rawSource;
 
-      if (json.data && Array.isArray(json.data) && json.data.length > 0) {
+      if (json.data && Array.isArray(json.data)) {
         setTenders(json.data);
         const now = new Date();
         const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')} WIB`;
-        setLastUpdated(`Hari ini, ${timeStr} (${rawSource})`);
-        setCurrentSource(rawSource);
+        setLastUpdated(`Hari ini, ${timeStr} (${source})`);
+        setCurrentSource(source);
       }
 
       setSyncResult({
@@ -94,33 +97,27 @@ export default function App() {
         message: `Koneksi Live Berhasil! Terhubung langsung ke SPEND PTBA (${count} paket lelang aktif terdeteksi). Sumber: ${source}.`,
       });
     } catch (err: any) {
-      // Jalur cadangan: cek /api/lelang.json
+      // Jika /api/lelang belum merespon, coba jalur gateway lengkap
       try {
-        const fallbackRes = await fetch(`/api/lelang.json?_t=${Date.now()}`, {
-          headers: { Accept: 'application/json' },
-        });
-        if (fallbackRes.ok) {
-          const json = await fallbackRes.json();
-          const count = Array.isArray(json) ? json.length : (json.data?.length || 0);
-          if (json.data && Array.isArray(json.data) && json.data.length > 0) {
-            setTenders(json.data);
-          }
-          setSyncResult({
-            isOpen: true,
-            type: 'success',
-            message: `Koneksi Live Berhasil! Terhubung langsung ke SPEND PTBA (${count} paket lelang aktif terdeteksi). Sumber: spend.bukitasam.co.id.`,
-          });
-          return;
-        }
-      } catch {
-        // Lanjutkan ke error popup
-      }
+        const fallback = await fetchTendersData(true);
+        setTenders(fallback.tenders);
+        setCurrentSource(fallback.source);
+        setLastUpdated(fallback.isLive ? `${fallback.timestamp} (${fallback.source})` : fallback.timestamp);
 
-      setSyncResult({
-        isOpen: true,
-        type: 'error',
-        message: `Gagal terhubung ke endpoint lelang: ${err?.message || 'Server belum merespon'}.`,
-      });
+        setSyncResult({
+          isOpen: true,
+          type: fallback.isLive ? 'success' : 'error',
+          message: fallback.isLive
+            ? `Koneksi Live Berhasil! Terhubung langsung ke SPEND PTBA (${fallback.tenders.length} paket lelang aktif terdeteksi). Sumber: ${fallback.source}.`
+            : `Endpoint /api/lelang belum dapat diakses (${err?.message || 'Memuat data cadangan'}). Ditampilkan ${fallback.tenders.length} paket lelang dari ${fallback.source}.`,
+        });
+      } catch {
+        setSyncResult({
+          isOpen: true,
+          type: 'error',
+          message: `Gagal terhubung ke endpoint lelang: ${err?.message || 'Server belum merespon'}.`,
+        });
+      }
     } finally {
       setIsSyncing(false);
     }

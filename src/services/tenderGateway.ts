@@ -117,7 +117,7 @@ export async function executeGatewayFetch(forceRefresh = false): Promise<FetchRe
       // Pastikan respon valid JSON dan bukan HTML fallback
       if (contentType.includes('application/json')) {
         const result = await res.json();
-        if (result.status && Array.isArray(result.data) && result.data.length > 0) {
+        if (result.status && Array.isArray(result.data)) {
           const liveSource = result.source || 'Live SPEND PTBA';
           saveToCache(result.data, timeStr, liveSource);
           return {
@@ -147,7 +147,7 @@ export async function executeGatewayFetch(forceRefresh = false): Promise<FetchRe
       const contentType = res.headers.get('content-type') || '';
       if (contentType.includes('application/json') || res.status === 200) {
         const result = await res.json();
-        if (result.status && Array.isArray(result.data) && result.data.length > 0) {
+        if (result.status && Array.isArray(result.data)) {
           saveToCache(result.data, timeStr, 'Live Sinkron PTBA');
           return {
             tenders: result.data,

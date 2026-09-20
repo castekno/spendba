@@ -30,7 +30,7 @@ app.get(['/api/lelang', '/api/lelang.json'], async (req, res) => {
 
   try {
     const liveTenders = await fetchLiveTendersFromPTBA();
-    if (liveTenders && liveTenders.length > 0) {
+    if (Array.isArray(liveTenders)) {
       cachedTenders = liveTenders;
       lastCacheTime = Date.now();
       return res.json({
@@ -41,7 +41,6 @@ app.get(['/api/lelang', '/api/lelang.json'], async (req, res) => {
       });
     }
 
-    // If live returned empty but we have cached, return cached
     if (cachedTenders) {
       return res.json({
         status: true,
