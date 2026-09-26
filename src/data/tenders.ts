@@ -1,5 +1,5 @@
 // Sinkronisasi otomatis data lelang resmi PT Bukit Asam Tbk (SPEND)
-// Terakhir diperbarui: 2026-09-20T11:36:44.088Z
+// Terakhir diperbarui: 2026-09-26T01:50:43.584Z
 
 import { TenderItem, NIBCategory } from '../types/tender';
 
@@ -67,15 +67,15 @@ export const NIB_CATEGORY_CONFIG: Record<
 
 export const INITIAL_TENDERS: TenderItem[] = [
   {
-    "id": "ptba-7625",
-    "spphNumber": "6575/EKS-1464/LG.02.03/IX/2026-1",
-    "title": "Jasa Sewa Kendaraan Operasional Termasuk Pengemudi Satuan Kerja Operational Services",
+    "id": "ptba-8563",
+    "spphNumber": "7509/EKS-1466/LG.02.03/IX/2026",
+    "title": "Jasa Pengangkutan Bahan Bakar BBM (BBM) Biosolar Industri",
     "unitKerja": "Satuan Kerja Pengadaan Tanjung Enim",
     "location": "Tanjung Enim, Sumatera Selatan",
     "method": "Lelang Terbuka 2 Sampul",
     "status": "Prakualifikasi",
-    "publishDate": "2026-09-15",
-    "closingDate": "2026-09-21 14:00",
+    "publishDate": "2026-09-21",
+    "closingDate": "2026-09-28 15:00",
     "hpsInfo": "Harga Terendah Pasing Grade 80 (Umum)",
     "nib": {
       "category": "Jasa",
@@ -92,7 +92,7 @@ export const INITIAL_TENDERS: TenderItem[] = [
         "Memiliki pengalaman kerja sejenis dalam 3 tahun terakhir"
       ]
     },
-    "scopeOfWork": "Jasa Sewa Kendaraan Operasional Termasuk Pengemudi Satuan Kerja Operational Services",
+    "scopeOfWork": "Jasa Pengangkutan Bahan Bakar BBM (BBM) Biosolar Industri dari Depo Kertapati Ke PTBA Kertapati Port",
     "documentRequirements": [
       "NIB Berbasis Risiko aktif dengan KBLI 49230",
       "Surat Keterangan Fiskal (SKF) tahun berjalan",
@@ -100,7 +100,46 @@ export const INITIAL_TENDERS: TenderItem[] = [
       "Surat Kuasa (bila dikuasakan) dan fotokopi KTP direksi"
     ],
     "contactPerson": {
-      "division": "Panitia Pengadaan - MULYADI",
+      "division": "Panitia Pengadaan - PRAYODI WIBOWO IRAWAN",
+      "email": "pengadaan@bukitasam.co.id"
+    },
+    "externalLink": "https://spend.bukitasam.co.id/web/index/lelang"
+  },
+  {
+    "id": "ptba-8380",
+    "spphNumber": "7330/EKS-1464/LG.02.03/IX/2026-1",
+    "title": "PENGADAAN JASA ALAT BERAT PRODUKSI – JASA OVERHAUL TRANSMISI SERTA PENYEDIAAN MAJOR COMPONENT & CRITICAL PARTS ALAT BERAT CAT",
+    "unitKerja": "Satuan Kerja Pengadaan Tanjung Enim",
+    "location": "Tanjung Enim, Sumatera Selatan",
+    "method": "Lelang Terbuka 2 Sampul",
+    "status": "Prakualifikasi",
+    "publishDate": "2026-09-22",
+    "closingDate": "2026-09-28 12:00",
+    "hpsInfo": "Harga Terendah Pasing Grade 80 (Umum)",
+    "nib": {
+      "category": "Mekanikal",
+      "kbliCode": "33141 / 28120 / 46591",
+      "kbliTitle": "Reparasi, Pemeliharaan & Suku Cadang Alat Berat/Mekanikal",
+      "ptbaClassification": "(SB.12) Jasa Pemeliharaan Alat Berat",
+      "requiredQualifications": [
+        "Menengah",
+        "Besar"
+      ],
+      "specialRequirements": [
+        "Terdaftar dan aktif pada Spend Management System PTBA dengan klasifikasi (SB.12) Jasa Pemeliharaan Alat Berat",
+        "Laporan Keuangan teraudit tahun buku terakhir",
+        "Memiliki pengalaman kerja sejenis dalam 3 tahun terakhir"
+      ]
+    },
+    "scopeOfWork": "PENGADAAN JASA ALAT BERAT PRODUKSI – JASA OVERHAUL TRANSMISI SERTA PENYEDIAAN MAJOR COMPONENT & CRITICAL PARTS ALAT BERAT CAT",
+    "documentRequirements": [
+      "NIB Berbasis Risiko aktif dengan KBLI 33141",
+      "Surat Keterangan Fiskal (SKF) tahun berjalan",
+      "Pakta Integritas dan Formulir Bebas Benturan Kepentingan",
+      "Surat Kuasa (bila dikuasakan) dan fotokopi KTP direksi"
+    ],
+    "contactPerson": {
+      "division": "Panitia Pengadaan - AJI WIRA SASMITA",
       "email": "pengadaan@bukitasam.co.id"
     },
     "externalLink": "https://spend.bukitasam.co.id/web/index/lelang"

@@ -1,4 +1,30 @@
-import { TenderItem } from '../src/types/tender';
+interface TenderItem {
+  id: string;
+  spphNumber: string;
+  title: string;
+  unitKerja: string;
+  location: string;
+  method: string;
+  status: 'Prakualifikasi' | 'Aanwijzing' | 'Pemasukan Dokumen' | 'Evaluasi' | 'Selesai' | 'Ditutup';
+  publishDate: string;
+  closingDate: string;
+  hpsInfo?: string;
+  nib: {
+    category: 'IT' | 'Sipil' | 'Mekanikal' | 'Jasa' | 'Lingkungan' | 'Lainnya';
+    kbliCode: string;
+    kbliTitle: string;
+    ptbaClassification: string;
+    requiredQualifications: string[];
+    specialRequirements: string[];
+  };
+  scopeOfWork: string;
+  documentRequirements: string[];
+  contactPerson?: {
+    division: string;
+    email: string;
+  };
+  externalLink?: string;
+}
 
 function determineCategory(title: string, rawClass: string): {
   category: TenderItem['nib']['category'];

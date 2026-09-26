@@ -7,6 +7,7 @@ import { TenderGroupSection, StageGroupConfig } from './components/TenderGroupSe
 import { SyncMessageModal } from './components/SyncMessageModal';
 import { INITIAL_TENDERS } from './data/tenders';
 import { fetchTendersData } from './services/tenderClient';
+import { sanitizeTendersList } from './services/tenderGateway';
 import { TenderItem, FilterState, NIBCategory, TenderTimeStats, TenderStatus } from './types/tender';
 import { parseTenderDate, getDaysRemaining } from './utils/dateUtils';
 import { 
@@ -19,11 +20,12 @@ import {
   ChevronRight,
   Clock,
   X,
-  AlertTriangle
+  AlertTriangle,
+  Loader2
 } from 'lucide-react';
 
 export default function App() {
-  const [tenders, setTenders] = useState<TenderItem[]>(INITIAL_TENDERS);
+  const [tenders, setTenders] = useState<TenderItem[]>(() => sanitizeTendersList(INITIAL_TENDERS));
   const [selectedTender, setSelectedTender] = useState<TenderItem | null>(null);
   const [isNIBGuideOpen, setIsNIBGuideOpen] = useState(false);
   const [syncResult, setSyncResult] = useState<{
@@ -37,6 +39,7 @@ export default function App() {
   });
   const [isSyncing, setIsSyncing] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [currentSource, setCurrentSource] = useState<string>('Live SPEND PTBA');
   const [lastUpdated, setLastUpdated] = useState<string>(() => {
     const now = new Date();
@@ -48,13 +51,15 @@ export default function App() {
     setIsRefreshing(true);
     try {
       const res = await fetchTendersData(force);
-      setTenders(res.tenders);
+      const safe = sanitizeTendersList(res.tenders);
+      setTenders(safe);
       setCurrentSource(res.source);
       setLastUpdated(res.isLive ? `${res.timestamp} (${res.source})` : res.timestamp);
     } catch (err) {
       console.warn('Gagal memuat data live:', err);
     } finally {
       setIsRefreshing(false);
+      setIsInitialLoading(false);
     }
   };
 
@@ -79,28 +84,31 @@ export default function App() {
       }
 
       const json = await res.json();
-      const count = Array.isArray(json) ? json.length : (json.data ? json.data.length : 0);
       const rawSource = json.source || 'spend.bukitasam.co.id';
       const source = rawSource.includes('spend.bukitasam.co.id') ? 'spend.bukitasam.co.id' : rawSource;
 
       if (json.data && Array.isArray(json.data)) {
-        setTenders(json.data);
+        const safe = sanitizeTendersList(json.data);
+        setTenders(safe);
         const now = new Date();
         const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')} WIB`;
         setLastUpdated(`Hari ini, ${timeStr} (${source})`);
         setCurrentSource(source);
-      }
 
-      setSyncResult({
-        isOpen: true,
-        type: 'success',
-        message: `Koneksi Live Berhasil! Terhubung langsung ke SPEND PTBA (${count} paket lelang aktif terdeteksi). Sumber: ${source}.`,
-      });
+        setSyncResult({
+          isOpen: true,
+          type: 'success',
+          message: `Koneksi Live Berhasil! Terhubung langsung ke SPEND PTBA (${safe.length} paket lelang aktif terdeteksi). Sumber: ${source}.`,
+        });
+      } else {
+        throw new Error('Format data tidak sesuai');
+      }
     } catch (err: any) {
       // Jika /api/lelang belum merespon, coba jalur gateway lengkap
       try {
         const fallback = await fetchTendersData(true);
-        setTenders(fallback.tenders);
+        const safe = sanitizeTendersList(fallback.tenders);
+        setTenders(safe);
         setCurrentSource(fallback.source);
         setLastUpdated(fallback.isLive ? `${fallback.timestamp} (${fallback.source})` : fallback.timestamp);
 
@@ -108,8 +116,8 @@ export default function App() {
           isOpen: true,
           type: fallback.isLive ? 'success' : 'error',
           message: fallback.isLive
-            ? `Koneksi Live Berhasil! Terhubung langsung ke SPEND PTBA (${fallback.tenders.length} paket lelang aktif terdeteksi). Sumber: ${fallback.source}.`
-            : `Endpoint /api/lelang belum dapat diakses (${err?.message || 'Memuat data cadangan'}). Ditampilkan ${fallback.tenders.length} paket lelang dari ${fallback.source}.`,
+            ? `Koneksi Live Berhasil! Terhubung langsung ke SPEND PTBA (${safe.length} paket lelang aktif terdeteksi). Sumber: ${fallback.source}.`
+            : `Endpoint /api/lelang belum dapat diakses (${err?.message || 'Memuat data cadangan'}). Ditampilkan ${safe.length} paket lelang dari ${fallback.source}.`,
         });
       } catch {
         setSyncResult({
@@ -413,6 +421,13 @@ export default function App() {
                 Kategori NIB: {filter.nibCategory}
               </span>
             )}
+
+            {(isRefreshing || isInitialLoading) && (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 font-medium border border-emerald-200">
+                <Loader2 className="w-3 h-3 animate-spin text-emerald-600" />
+                <span>Sinkronisasi Live SPEND...</span>
+              </span>
+            )}
           </div>
         </div>
 
@@ -428,6 +443,20 @@ export default function App() {
                 onSelectTender={setSelectedTender}
               />
             ))}
+          </div>
+        ) : isInitialLoading ? (
+          /* Loading Skeleton State */
+          <div className="space-y-4">
+            <div className="bg-white rounded-xl border border-slate-200 p-6 animate-pulse">
+              <div className="h-5 bg-slate-200 rounded w-1/4 mb-4"></div>
+              <div className="h-4 bg-slate-100 rounded w-3/4 mb-2"></div>
+              <div className="h-4 bg-slate-100 rounded w-1/2"></div>
+            </div>
+            <div className="bg-white rounded-xl border border-slate-200 p-6 animate-pulse">
+              <div className="h-5 bg-slate-200 rounded w-1/3 mb-4"></div>
+              <div className="h-4 bg-slate-100 rounded w-2/3 mb-2"></div>
+              <div className="h-4 bg-slate-100 rounded w-1/2"></div>
+            </div>
           </div>
         ) : (
           /* Empty State */
