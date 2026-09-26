@@ -1,5 +1,5 @@
 // Sinkronisasi otomatis data lelang resmi PT Bukit Asam Tbk (SPEND)
-// Terakhir diperbarui: 2026-09-26T01:50:43.584Z
+// Terakhir diperbarui: 2026-09-26T02:05:46.657Z
 
 import { TenderItem, NIBCategory } from '../types/tender';
 

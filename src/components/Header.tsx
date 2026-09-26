@@ -20,6 +20,7 @@ interface HeaderProps {
   isSyncing?: boolean;
   onRefresh: () => void;
   isRefreshing: boolean;
+  isInitialLoading?: boolean;
   lastUpdated: string;
 }
 
@@ -32,6 +33,7 @@ export const Header: React.FC<HeaderProps> = ({
   isSyncing = false,
   onRefresh,
   isRefreshing,
+  isInitialLoading = false,
   lastUpdated,
 }) => {
   return (
@@ -156,9 +158,13 @@ export const Header: React.FC<HeaderProps> = ({
                 <div className="text-[11px] font-semibold text-slate-300 whitespace-nowrap">
                   Total Paket Aktif
                 </div>
-                <div className="text-base font-black text-white whitespace-nowrap">
-                  {timeStats.total} <span className="text-[11px] font-medium text-slate-400">Paket</span>
-                </div>
+                {isInitialLoading ? (
+                  <div className="h-5 w-16 bg-white/20 rounded animate-pulse my-0.5" />
+                ) : (
+                  <div className="text-base font-black text-white whitespace-nowrap">
+                    {timeStats.total} <span className="text-[11px] font-medium text-slate-400">Paket</span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -180,9 +186,13 @@ export const Header: React.FC<HeaderProps> = ({
                   <span>Kritis &lt; 3 Hari</span>
                   <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping"></span>
                 </div>
-                <div className="text-base font-black text-rose-400 whitespace-nowrap">
-                  {timeStats.under3Days} <span className="text-[11px] font-medium text-rose-300/80">Paket</span>
-                </div>
+                {isInitialLoading ? (
+                  <div className="h-5 w-14 bg-rose-500/30 rounded animate-pulse my-0.5" />
+                ) : (
+                  <div className="text-base font-black text-rose-400 whitespace-nowrap">
+                    {timeStats.under3Days} <span className="text-[11px] font-medium text-rose-300/80">Paket</span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -203,9 +213,13 @@ export const Header: React.FC<HeaderProps> = ({
                 <div className="text-[11px] font-bold text-amber-300 whitespace-nowrap">
                   Mendekati (3–7 Hari)
                 </div>
-                <div className="text-base font-black text-amber-400 whitespace-nowrap">
-                  {timeStats.approaching} <span className="text-[11px] font-medium text-amber-300/80">Paket</span>
-                </div>
+                {isInitialLoading ? (
+                  <div className="h-5 w-14 bg-amber-500/30 rounded animate-pulse my-0.5" />
+                ) : (
+                  <div className="text-base font-black text-amber-400 whitespace-nowrap">
+                    {timeStats.approaching} <span className="text-[11px] font-medium text-amber-300/80">Paket</span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -226,9 +240,13 @@ export const Header: React.FC<HeaderProps> = ({
                 <div className="text-[11px] font-bold text-emerald-300 whitespace-nowrap">
                   Waktu Longgar (&gt; 7 Hari)
                 </div>
-                <div className="text-base font-black text-emerald-400 whitespace-nowrap">
-                  {timeStats.relaxed} <span className="text-[11px] font-medium text-emerald-300/80">Paket</span>
-                </div>
+                {isInitialLoading ? (
+                  <div className="h-5 w-14 bg-emerald-500/30 rounded animate-pulse my-0.5" />
+                ) : (
+                  <div className="text-base font-black text-emerald-400 whitespace-nowrap">
+                    {timeStats.relaxed} <span className="text-[11px] font-medium text-emerald-300/80">Paket</span>
+                  </div>
+                )}
               </div>
             </div>
           </div>

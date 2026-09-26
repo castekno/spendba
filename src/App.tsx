@@ -4,6 +4,7 @@ import { FilterBar } from './components/FilterBar';
 import { TenderDetailModal } from './components/TenderDetailModal';
 import { NIBGuideModal } from './components/NIBGuideModal';
 import { TenderGroupSection, StageGroupConfig } from './components/TenderGroupSection';
+import { TenderSkeleton } from './components/TenderSkeleton';
 import { SyncMessageModal } from './components/SyncMessageModal';
 import { INITIAL_TENDERS } from './data/tenders';
 import { fetchTendersData } from './services/tenderClient';
@@ -25,7 +26,7 @@ import {
 } from 'lucide-react';
 
 export default function App() {
-  const [tenders, setTenders] = useState<TenderItem[]>(() => sanitizeTendersList(INITIAL_TENDERS));
+  const [tenders, setTenders] = useState<TenderItem[]>([]);
   const [selectedTender, setSelectedTender] = useState<TenderItem | null>(null);
   const [isNIBGuideOpen, setIsNIBGuideOpen] = useState(false);
   const [syncResult, setSyncResult] = useState<{
@@ -366,6 +367,7 @@ export default function App() {
         isSyncing={isSyncing}
         onRefresh={handleRefresh}
         isRefreshing={isRefreshing}
+        isInitialLoading={isInitialLoading}
         lastUpdated={lastUpdated}
       />
 
@@ -412,9 +414,15 @@ export default function App() {
             <span className="font-bold text-slate-900 text-sm">
               Daftar Paket Lelang
             </span>
-            <span className="px-2 py-0.5 rounded-full bg-slate-200/80 text-slate-700 font-semibold">
-              {filteredTenders.length} dari {tenders.length} Paket
-            </span>
+            {isInitialLoading ? (
+              <span className="px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-600 font-semibold animate-pulse text-[11px]">
+                Memuat paket...
+              </span>
+            ) : (
+              <span className="px-2 py-0.5 rounded-full bg-slate-200/80 text-slate-700 font-semibold">
+                {filteredTenders.length} dari {tenders.length} Paket
+              </span>
+            )}
 
             {filter.nibCategory !== 'Semua' && (
               <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-amber-100 text-amber-900 font-semibold border border-amber-200 text-xs">
@@ -432,7 +440,10 @@ export default function App() {
         </div>
 
         {/* GROUPED TENDER SECTIONS */}
-        {filteredTenders.length > 0 ? (
+        {isInitialLoading ? (
+          /* Animated Skeleton Loading */
+          <TenderSkeleton viewMode={viewMode} count={2} />
+        ) : filteredTenders.length > 0 ? (
           <div>
             {groupedTenders.map(({ config, items }) => (
               <TenderGroupSection
@@ -443,20 +454,6 @@ export default function App() {
                 onSelectTender={setSelectedTender}
               />
             ))}
-          </div>
-        ) : isInitialLoading ? (
-          /* Loading Skeleton State */
-          <div className="space-y-4">
-            <div className="bg-white rounded-xl border border-slate-200 p-6 animate-pulse">
-              <div className="h-5 bg-slate-200 rounded w-1/4 mb-4"></div>
-              <div className="h-4 bg-slate-100 rounded w-3/4 mb-2"></div>
-              <div className="h-4 bg-slate-100 rounded w-1/2"></div>
-            </div>
-            <div className="bg-white rounded-xl border border-slate-200 p-6 animate-pulse">
-              <div className="h-5 bg-slate-200 rounded w-1/3 mb-4"></div>
-              <div className="h-4 bg-slate-100 rounded w-2/3 mb-2"></div>
-              <div className="h-4 bg-slate-100 rounded w-1/2"></div>
-            </div>
           </div>
         ) : (
           /* Empty State */
